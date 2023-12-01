@@ -2,7 +2,7 @@
 using UnityEngine;
 using VRC.SDKBase;
 
-namespace MagmaMc.ReflectionProbeUpdater
+namespace MagmaMc.Utils
 {
     public class ReflectionProbeUpdater: UdonSharpBehaviour
     {

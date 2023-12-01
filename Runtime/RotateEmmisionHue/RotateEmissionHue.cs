@@ -1,27 +1,29 @@
 ﻿using UdonSharp;
 using UnityEngine;
-
-public class RotateEmissionHue: UdonSharpBehaviour
+namespace MagmaMc.Utils
 {
-    public float rotationSpeed = 1.0f;
-
-    private Renderer _renderer;
-    private Material _sharedMaterial;
-
-    private void Start()
+    public class RotateEmissionHue: UdonSharpBehaviour
     {
-        _renderer = GetComponent<Renderer>();
-        _sharedMaterial = _renderer.sharedMaterial;
-    }
+        public float rotationSpeed = 1.0f;
 
-    private void Update()
-    {
-        Color Emission = _sharedMaterial.GetColor("_EmissionColor");
-        Color.RGBToHSV(Emission, out float hue, out float saturation, out float value);
+        private Renderer _renderer;
+        private Material _sharedMaterial;
 
-        hue = (hue + (rotationSpeed / 10) * Time.deltaTime) % 1.0f;
+        private void Start()
+        {
+            _renderer = GetComponent<Renderer>();
+            _sharedMaterial = _renderer.sharedMaterial;
+        }
 
-        _sharedMaterial.SetColor("_EmissionColor", Color.HSVToRGB(hue, saturation, value));
-        _sharedMaterial.EnableKeyword("_EMISSION");
+        private void Update()
+        {
+            Color Emission = _sharedMaterial.GetColor("_EmissionColor");
+            Color.RGBToHSV(Emission, out float hue, out float saturation, out float value);
+
+            hue = (hue + (rotationSpeed / 10) * Time.deltaTime) % 1.0f;
+
+            _sharedMaterial.SetColor("_EmissionColor", Color.HSVToRGB(hue, saturation, value));
+            _sharedMaterial.EnableKeyword("_EMISSION");
+        }
     }
 }
