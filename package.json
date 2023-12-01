@@ -1,0 +1,18 @@
+{
+	"name" : "net.magma-mc.utils",
+	"displayName" : "MagmaMc.Utils",
+	"version" : "1.0.0",
+    "url": "https://github.com/MagmaMcNet/Utils.git",
+	"unity" : "2019.4",
+	"description" : "Useful UdonSharp Scripts For VRChat World Development",
+	"author" : {
+		"name" : "MagmaMc",
+		"email" : "magma.mc@magma-mc.net",
+		"url" : "https://magmamcnet.github.io/VPM/"
+	},
+	"vpmDependencies" : {
+        "com.vrchat.worlds": "^3.3.0"
+	},
+	"samples" : [],
+	"legacyFolders" : { }
+}
