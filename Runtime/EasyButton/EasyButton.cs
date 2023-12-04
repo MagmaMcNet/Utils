@@ -2,6 +2,9 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
+#if MAGMAMC_ADMINSYSTEM
+using MagmaMc.AdminUtil;
+#endif
 
 namespace MagmaMc.Utils
 {
@@ -11,8 +14,13 @@ public class EasyButton : AdminUtilRef
     public class EasyButton: UdonSharpBehaviour
 #endif
     {
+        [Tooltip("GameObject List That Will Get Enabled While The Button Is On")]
         public GameObject[] EnableList;
+        [Tooltip("GameObject List That Will Get Enabled While The Button Is Off")]
         public GameObject[] DisableList;
+
+        public Material EnabledMat;
+        public Material DisableMat;
 
         [UdonSynced] public bool Networked;
 #if MAGMAMC_ADMINSYSTEM
@@ -42,12 +50,12 @@ public class EasyButton : AdminUtilRef
         if (MasterOnly)
             AdminOnly = true;
         if (AdminOnly && !MasterOnly)
-            if (!IsAdmin())
+            if (!_AdminUtil.IsAdmin(Networking.LocalPlayer))
                 return;
 #endif
             if (MasterOnly)
 #if MAGMAMC_ADMINSYSTEM
-            if (!IsAdmin() || Networking.IsMaster)
+            if (!_AdminUtil.IsAdmin(Networking.LocalPlayer) || Networking.IsMaster)
                 return;
 #else
                 if (Networking.IsMaster)
@@ -64,6 +72,7 @@ public class EasyButton : AdminUtilRef
         {
             if (Networked)
                 IntermediateValue = true;
+            GetComponent<MeshRenderer>().material = EnabledMat;
             CurrentValue = true;
             foreach (var obj in EnableList)
                 obj.SetActive(true);
@@ -74,15 +83,12 @@ public class EasyButton : AdminUtilRef
         {
             if (Networked)
                 IntermediateValue = false;
+            GetComponent<MeshRenderer>().material = DisableMat;
             CurrentValue = false;
             foreach (var obj in EnableList)
                 obj.SetActive(false);
             foreach (var obj in DisableList)
                 obj.SetActive(true);
         }
-
-#if MAGMAMC_ADMINSYSTEM
-    public bool IsAdmin() => _AdminUtil.AdminListContains(Networking.LocalPlayer.playerId);
-#endif
     }
 }

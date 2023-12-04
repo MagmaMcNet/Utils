@@ -7,3 +7,5 @@ Just Some Useful UdonSharp Scripts For VRChat World Development.
 * LockableSeat
 * ReflectionProbeUpdater
 * RotateEmmisionHue
+* AttachToPlayer
+* AutoDoor
