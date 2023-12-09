@@ -1,4 +1,5 @@
-﻿using UdonSharp;
+﻿#define _MAGMAMC_ADMINSYSTEM
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
@@ -8,6 +9,7 @@ using MagmaMc.AdminUtil;
 
 namespace MagmaMc.Utils
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Continuous)]
 #if MAGMAMC_ADMINSYSTEM
 public class EasyButton : AdminUtilRef
 #else
@@ -22,9 +24,9 @@ public class EasyButton : AdminUtilRef
         public Material EnabledMat;
         public Material DisableMat;
 
-        [UdonSynced] public bool Networked;
+        public bool Networked;
 #if MAGMAMC_ADMINSYSTEM
-    public bool AdminOnly;
+        public bool AdminOnly;
 #endif
         public bool MasterOnly;
         public bool DefaultValue;
@@ -33,16 +35,31 @@ public class EasyButton : AdminUtilRef
 
         [HideInInspector, UdonSynced] public bool IntermediateValue;
 
-#if MAGMAMC_ADMINSYSTEM
-    public override void InitializedAwake()
-#else
-        public void Awake()
-#endif
+        private ushort Depth = 0;
+
+        [RecursiveMethod]
+        public void WaitForSync()
         {
-            if (Networking.IsMaster)
+            if (!Networking.IsNetworkSettled)
+            {
+                Depth++;
+                if (Depth > 250)
+                {
+                    Debug.LogError($"Attempted To Sync EasyButton '{Depth}' Times, Failed On GameObject '{gameObject.name}' ", gameObject);
+                    return;
+                }
+                SendCustomEventDelayedSeconds(nameof(WaitForSync), 0.25f);
+                return;
+            }
+           
+            if (Networked)
                 IntermediateValue = DefaultValue;
-            CurrentValue = IntermediateValue;
+            CurrentValue = Networked ? IntermediateValue : DefaultValue;
+            SendCustomEvent(CurrentValue ? nameof(EnableObjects) : nameof(DisableObjects));
         }
+
+        public void Start() =>
+            SendCustomEventDelayedSeconds(nameof(WaitForSync), 0.5f);
 
         public override void Interact()
         {
@@ -55,10 +72,10 @@ public class EasyButton : AdminUtilRef
 #endif
             if (MasterOnly)
 #if MAGMAMC_ADMINSYSTEM
-            if (!_AdminUtil.IsAdmin(Networking.LocalPlayer) || Networking.IsMaster)
+            if (!_AdminUtil.IsAdmin(Networking.LocalPlayer) && !Networking.IsMaster)
                 return;
 #else
-                if (Networking.IsMaster)
+                if (!Networking.IsMaster)
                     return;
 #endif
             string Event = (CurrentValue ? nameof(DisableObjects) : nameof(EnableObjects));
@@ -68,27 +85,20 @@ public class EasyButton : AdminUtilRef
                 SendCustomNetworkEvent(NetworkEventTarget.All, Event);
         }
 
-        public void EnableObjects()
+        public void EnableObjects() => ToggleAction(true);
+        public void DisableObjects() => ToggleAction(false);
+
+        public void ToggleAction(bool Action)
         {
             if (Networked)
-                IntermediateValue = true;
-            GetComponent<MeshRenderer>().material = EnabledMat;
-            CurrentValue = true;
+                IntermediateValue = Action;
+            GetComponent<MeshRenderer>().material = Action ? EnabledMat : DisableMat;
+            CurrentValue = Action;
             foreach (var obj in EnableList)
-                obj.SetActive(true);
+                obj.SetActive(Action);
             foreach (var obj in DisableList)
-                obj.SetActive(false);
+                obj.SetActive(!Action);
         }
-        public void DisableObjects()
-        {
-            if (Networked)
-                IntermediateValue = false;
-            GetComponent<MeshRenderer>().material = DisableMat;
-            CurrentValue = false;
-            foreach (var obj in EnableList)
-                obj.SetActive(false);
-            foreach (var obj in DisableList)
-                obj.SetActive(true);
-        }
+
     }
 }
