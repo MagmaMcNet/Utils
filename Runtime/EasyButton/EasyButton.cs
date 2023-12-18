@@ -33,13 +33,21 @@ public class EasyButton : AdminUtilRef
 
         private bool CurrentValue;
 
-        [HideInInspector, UdonSynced] public bool IntermediateValue;
 
         private ushort Depth = 0;
 
         [RecursiveMethod]
         public void WaitForSync()
         {
+            if (Networking.IsMaster)
+            {
+                ToggleAction(DefaultValue);
+                return;
+            }
+
+            if (!Networked)
+                return;
+
             if (!Networking.IsNetworkSettled)
             {
                 Depth++;
@@ -48,14 +56,10 @@ public class EasyButton : AdminUtilRef
                     Debug.LogError($"Attempted To Sync EasyButton '{Depth}' Times, Failed On GameObject '{gameObject.name}' ", gameObject);
                     return;
                 }
-                SendCustomEventDelayedSeconds(nameof(WaitForSync), 0.25f);
+                SendCustomEventDelayedSeconds(nameof(WaitForSync), 0.5f);
                 return;
             }
-           
-            if (Networked)
-                IntermediateValue = DefaultValue;
-            CurrentValue = Networked ? IntermediateValue : DefaultValue;
-            SendCustomEvent(CurrentValue ? nameof(EnableObjects) : nameof(DisableObjects));
+            RequestSync();
         }
 
         public void Start() =>
@@ -90,14 +94,24 @@ public class EasyButton : AdminUtilRef
 
         public void ToggleAction(bool Action)
         {
-            if (Networked)
-                IntermediateValue = Action;
             GetComponent<MeshRenderer>().material = Action ? EnabledMat : DisableMat;
             CurrentValue = Action;
             foreach (var obj in EnableList)
                 obj.SetActive(Action);
             foreach (var obj in DisableList)
                 obj.SetActive(!Action);
+        }
+
+
+        public void RequestSync() =>
+            SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(SyncClients));
+
+        public void SyncClients()
+        {
+            if (CurrentValue)
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(EnableObjects));
+            else
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(DisableObjects));
         }
 
     }
