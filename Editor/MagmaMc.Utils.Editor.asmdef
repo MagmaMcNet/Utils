@@ -1,14 +1,12 @@
 {
-    "name": "MagmaMc.Utils",
+    "name": "MagmaMc.Utils.Editor",
     "rootNamespace": "",
     "references": [
-        "VRC.Udon",
-        "UdonSharp.Runtime",
-        "UdonSharp.Editor",
-        "VRC.SDKBase",
-        "PermissionManager"
+        "GUID:7294b0051ead8954eac47657e5d85b4f"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

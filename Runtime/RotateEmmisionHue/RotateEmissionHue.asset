@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: RotateEmissionHue
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 13dc348d75b76a34d8e978d9fd96e9e5,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 75232725dae7a9a4ba65a5489e171110,
     type: 2}
   udonAssembly: 
   assemblyError: 

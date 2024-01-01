@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: AttachToPlayer
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 65ea67c8d30ee0e45943721f3a40a8e1,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 72df24217e819104ca6f579c787b0117,
     type: 2}
   udonAssembly: 
   assemblyError: 
@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 0
-  scriptID: -3086955821109496416
+  scriptID: 1411861802811907488
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 

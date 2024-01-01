@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: AttachToBone
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 0ef8336a911dbca4bbed6a91ad43806d,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 1a6ecaab75535a54384ee0e70fe9a2e0,
     type: 2}
   udonAssembly: 
   assemblyError: 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: LockableSeat
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 65420d6a211510544877e1297b06ea53,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 55182e5a8d8df974d863ead42eef69b1,
     type: 2}
   udonAssembly: 
   assemblyError: 

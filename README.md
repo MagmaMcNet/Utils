@@ -9,3 +9,4 @@ Just Some Useful UdonSharp Scripts For VRChat World Development.
 * RotateEmmisionHue
 * AttachToPlayer
 * AutoDoor
+* PlayerMod
